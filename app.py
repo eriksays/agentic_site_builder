@@ -1,21 +1,11 @@
-# app.py
-
+from config.settings import DEFAULT_MODEL, DEFAULT_APP
+from llms.factory import get_llm
 from workflows.main_flow import create_flow
-
-def input_with_default(prompt, default):
-    full_prompt = f"{prompt} [{default}]: "
-    response = input(full_prompt)
-    return response.strip() or default
+from utils.input_with_default import input_with_default
 
 if __name__ == "__main__":
-    
-    user_prompt = input_with_default(
-        "What kind of web app do you want to build?",
-        "A recipe site where users can submit, search, and favorite soup recipes"
-    )
+    user_prompt = input_with_default("What kind of web app?", DEFAULT_APP)
+    model_name = input_with_default("Ollama model to use", DEFAULT_MODEL)
 
-    graph = create_flow()
+    graph = create_flow(model_name=model_name)
     result = graph.invoke({"user_prompt": user_prompt})
-    
-    print("\n--- Product Spec ---")
-    print(result["product_spec"])
