@@ -1,5 +1,7 @@
 from agents.base import BaseAgent
-from typing import List
+from typing import List, Dict
+from utils.templates import load_template, format_template
+
 
 class ArchitectAgent(BaseAgent):
     def __init__(self, llm):
@@ -12,19 +14,23 @@ class ArchitectAgent(BaseAgent):
             persona="You are a senior software architect. Based on the product specification, produce a high-level architecture plan. Include major components, technologies, APIs, and any assumptions."
         )
 
-    def _generate_response(self, inputs: List[str], context_docs: List[str]) -> str:
-        product_spec = inputs[0] if inputs else ""
+    def _generate_response(self, inputs: Dict[str, str], context_docs: List[str]) -> str:
+        product_spec = inputs.get("product_spec", "")
+        feedback = inputs.get("feedback", "")
         context_string = "\n\n".join(context_docs)
 
-        prompt = f"""{self.persona}
+        feedback_section = (
+            f"\n\nThe user has provided feedback for improvement:\n{feedback}"
+            if feedback else ""
+        )
 
-        Product Specification:
-        {product_spec}
-
-        Prior context:
-        {context_string}
-
-        Write a complete high-level architecture plan for the system.
-        """
+        template = load_template("architecture_plan_template.txt")
+        prompt = format_template(
+            template,
+            persona=self.persona,
+            product_spec=product_spec,
+            context=context_string,
+            feedback_section=feedback_section
+        )
 
         return self.llm.invoke(prompt)

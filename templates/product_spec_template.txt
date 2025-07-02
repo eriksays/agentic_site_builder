@@ -1,0 +1,15 @@
+{persona}
+
+User prompt:
+{user_prompt}
+
+Relevant project context:
+{context}
+
+{feedback_section}
+
+Please generate a detailed product specification with:
+- Goals
+- User stories
+- Key features
+- Success criteria

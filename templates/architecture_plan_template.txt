@@ -1,0 +1,14 @@
+{persona}
+
+Product Specification:
+{product_spec}
+
+Prior context:
+{context}
+{feedback_section}
+
+Please provide a high-level architecture plan including:
+- Frontend and backend components
+- APIs and data flow
+- Technical assumptions
+- Design/UX considerations
