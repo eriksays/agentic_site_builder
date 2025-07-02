@@ -1,36 +1,23 @@
-# workflows/main_flow.py
-
 from langgraph.graph import StateGraph
-from agents.product_manager import ProductManagerAgent
-from agents.architect import ArchitectAgent
-from llms.factory import get_llm
-from typing import TypedDict
+from typing import TypedDict, NotRequired, List, Any
+from agents.base import BaseAgent
 
-# ✅ Define the state shape
 class AppState(TypedDict, total=False):
+    session_id: str
     user_prompt: str
     product_spec: str
     architecture_plan: str
-    last_agent: str
 
-def create_flow(model_name="llama3"):
-    llm = get_llm(model_name)
-    pm_agent = ProductManagerAgent(llm)
-    arch_agent = ArchitectAgent(llm)
+def create_flow(agents: List[BaseAgent], memory_store, session_id: str):
+    builder = StateGraph(AppState)
 
-    def product_manager_node(state: AppState) -> AppState:
-        result = pm_agent.run(state)
-        return {**state, **result}
+    for agent in agents:
+        builder.add_node(agent.name, lambda state, agent=agent: agent.run(state, session_id=session_id, memory_store=memory_store))
 
-    def architect_node(state: AppState) -> AppState:
-        result = arch_agent.run(state)
-        return {**state, **result}
+    for i in range(len(agents)-1):
+        builder.add_edge(agents[i].name, agents[i+1].name)
 
-    builder = StateGraph(state_schema=AppState)
-    builder.add_node("ProductManager", product_manager_node)
-    builder.add_node("Architect", architect_node)
-
-    builder.set_entry_point("ProductManager")
-    builder.add_edge("ProductManager", "Architect")
+    builder.set_entry_point(agents[0].name)
+    builder.set_finish_point(agents[-1].name)
 
     return builder.compile()

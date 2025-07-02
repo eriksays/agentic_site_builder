@@ -1,47 +1,30 @@
-# agents/product_manager.py
+from agents.base import BaseAgent
+from typing import List
 
-from agents.base import Agent
-from memory.vectorstore import save_to_memory
-from utils.hitl import human_review
+class ProductManagerAgent(BaseAgent):
+    def __init__(self, llm):
+        super().__init__(
+            llm=llm,
+            name="ProductManagerAgent",
+            input_keys=["user_prompt"],
+            output_key="product_spec",
+            doc_type="product_spec",
+            persona="You are a senior product manager. Based on the user's prompt, create a clear and concise product specification. Include goals, user stories, key features, and success criteria."
+        )
 
-class ProductManagerAgent(Agent):
-    def run(self, state: dict) -> dict:
-        prompt = self.build_prompt(state)
-        output = self.llm.invoke(prompt)
+    def _generate_response(self, inputs: List[str], context_docs: List[str]) -> str:
+        user_prompt = inputs[0] if inputs else ""
+        context_string = "\n\n".join(context_docs)
 
-        output, feedback = human_review(output, "Product Manager")
-        if feedback:
-            state["feedback"] = feedback  # Store feedback for rerun
-            return self.run(state)        # Regenerate with new prompt
+        prompt = f"""{self.persona}
 
-        if output:
-            save_to_memory("ProductManager", output, metadata={"type": "product_spec"})
-            return {
-                "product_spec": output,
-                "last_agent": "ProductManager"
-            }
+        User prompt:
+        {user_prompt}
 
-    def build_prompt(self, state: dict) -> str:
-        base_prompt = f"""
-You are a product manager. Based on the user's idea, define:
+        Previous context:
+        {context_string}
 
-- A short product spec
-- 3 user stories
-- Suggested tech stack
+        Please write a full product specification below.
+        """
 
-📌 Use the following preferred technologies when possible:
-- Backend: Laravel (PHP)
-- Frontend: Blade templates (not React or Vue)
-- Interactivity: Alpine.js for lightweight behavior, Livewire for backend-driven components
-- Database: MySQL
-
----
-USER IDEA:
-{state.get('user_prompt')}
-"""
-
-        # Add feedback if present
-        if "feedback" in state:
-            base_prompt += f"\n\n💬 User Feedback on previous version:\n{state['feedback']}\n"
-
-        return base_prompt
+        return self.llm.invoke(prompt)

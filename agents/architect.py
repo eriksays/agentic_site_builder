@@ -1,48 +1,30 @@
-# agents/architect.py
+from agents.base import BaseAgent
+from typing import List
 
-from agents.base import Agent
-from memory.vectorstore import save_to_memory
-from utils.hitl import human_review
+class ArchitectAgent(BaseAgent):
+    def __init__(self, llm):
+        super().__init__(
+            llm=llm,
+            name="ArchitectAgent",
+            input_keys=["product_spec"],
+            output_key="architecture_plan",
+            doc_type="architecture_plan",
+            persona="You are a senior software architect. Based on the product specification, produce a high-level architecture plan. Include major components, technologies, APIs, and any assumptions."
+        )
 
-class ArchitectAgent(Agent):
-    def run(self, state: dict) -> dict:
-        prompt = self.build_prompt(state)
-        output = self.llm.invoke(prompt)
+    def _generate_response(self, inputs: List[str], context_docs: List[str]) -> str:
+        product_spec = inputs[0] if inputs else ""
+        context_string = "\n\n".join(context_docs)
 
-        output, feedback = human_review(output, "Architect")
-        if feedback:
-            state["feedback"] = feedback  # Store feedback to adjust prompt
-            return self.run(state)        # Regenerate using feedback
+        prompt = f"""{self.persona}
 
-        if output:
-            save_to_memory("Architect", output, metadata={"type": "architecture_plan"})
-            return {
-                "architecture_plan": output,
-                "last_agent": "Architect"
-            }
+        Product Specification:
+        {product_spec}
 
-    def build_prompt(self, state: dict) -> str:
-        base_prompt = f"""
-You are a senior Laravel architect.
+        Prior context:
+        {context_string}
 
-Based on the following product spec, generate:
-- A MySQL database schema (tables + fields, described or in SQL)
-- A suggested Laravel file/folder structure using Blade + Livewire
-- A list of web routes (e.g., GET /recipes, POST /login)
+        Write a complete high-level architecture plan for the system.
+        """
 
-📌 Stack:
-- Backend: Laravel (PHP)
-- Frontend: Blade templates
-- Interactivity: Alpine.js + Livewire
-- Database: MySQL
-
----
-PRODUCT SPEC:
-{state.get('product_spec')}
-"""
-
-        # Include feedback if present
-        if "feedback" in state:
-            base_prompt += f"\n\n💬 User Feedback on previous version:\n{state['feedback']}\n"
-
-        return base_prompt
+        return self.llm.invoke(prompt)
