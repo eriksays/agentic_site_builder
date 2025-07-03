@@ -1,21 +1,29 @@
 from langgraph.graph import StateGraph
-from typing import TypedDict, NotRequired, List, Any
-from agents.base import BaseAgent
+from typing import List
+from agents.configurable_agent import load_agents_from_json
+from memory.memory_store import MemoryStore
+from workflows.state import AppState
 
-class AppState(TypedDict, total=False):
-    session_id: str
-    user_prompt: str
-    product_spec: str
-    architecture_plan: str
 
-def create_flow(agents: List[BaseAgent], memory_store, session_id: str):
+def create_flow(agent_config_path: str, model_name: str, session_id: str, memory_store):
+    # Load dynamic agents from JSON
+    agents = load_agents_from_json(agent_config_path, model_name)
+
+    # Build LangGraph flow with structured AppState
     builder = StateGraph(AppState)
 
     for agent in agents:
-        builder.add_node(agent.name, lambda state, agent=agent: agent.run(state, session_id=session_id, memory_store=memory_store))
+        builder.add_node(
+            agent.name,
+            lambda state, agent=agent: agent.run(
+                state,
+                session_id=session_id,
+                memory_store=memory_store,
+            ),
+        )
 
-    for i in range(len(agents)-1):
-        builder.add_edge(agents[i].name, agents[i+1].name)
+    for i in range(len(agents) - 1):
+        builder.add_edge(agents[i].name, agents[i + 1].name)
 
     builder.set_entry_point(agents[0].name)
     builder.set_finish_point(agents[-1].name)

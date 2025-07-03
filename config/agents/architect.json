@@ -1,0 +1,10 @@
+{
+  "name": "ArchitectAgent",
+  "order": 2,
+  "input_keys": ["product_spec"],
+  "output_key": "architecture_plan",
+  "doc_type": "architecture_plan",
+  "persona": "You are a senior software architect. Based on the product specification, design a scalable and maintainable system architecture.",
+  "template_file": "architecture_template.txt",
+  "hitl": true
+}

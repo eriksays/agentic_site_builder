@@ -1,33 +1,27 @@
 # memory/memory_store.py
-
-from typing import Optional
+from langchain.vectorstores import Chroma
+from langchain.embeddings.openai import OpenAIEmbeddings  # Replace if needed
 
 class MemoryStore:
-    def __init__(self, chroma_client):
-        self.chroma = chroma_client  # Assume this is a chromadb.Collection or wrapper
-
-    def _make_key(self, session_id: str, doc_type: str) -> str:
-        return f"{session_id}:{doc_type}"
-
-    def add_document(self, session_id: str, doc_type: str, content: str):
-        key = self._make_key(session_id, doc_type)
-        self.chroma.add(
-            documents=[content],
-            ids=[key],
-            metadatas=[{"session_id": session_id, "doc_type": doc_type}]
+    def __init__(self, persist_directory="chroma_store"):
+        self.chroma = Chroma(
+            collection_name="agent_memory",
+            embedding_function=OpenAIEmbeddings(),
+            persist_directory=persist_directory
         )
 
-    def get_document(self, session_id: str, doc_type: str) -> Optional[str]:
-        key = self._make_key(session_id, doc_type)
-        results = self.chroma.get(ids=[key])
-        if results and results['documents']:
-            return results['documents'][0]
-        return None
+    def add_document(self, session_id: str, content: str, metadata: dict = None):
+        if metadata is None:
+            metadata = {}
+        metadata["session_id"] = session_id
+        self.chroma.add_texts([content], metadatas=[metadata])
 
-    def get_all_documents(self, session_id: str) -> list[str]:
+    def get_all_documents(self, session_id: str):
         results = self.chroma.query(
-            query_texts=["project context"],
-            n_results=20,
+            query_texts=[""],
+            n_results=100,
             where={"session_id": session_id}
         )
-        return results["documents"] if results else []
+        return results["documents"]
+
+memory_store = MemoryStore()
