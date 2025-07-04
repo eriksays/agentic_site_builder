@@ -24,7 +24,7 @@ if __name__ == "__main__":
     graph = create_flow(agents, memory_store, session_id)
 
     # seed the raw user input
-    memory_store.add_document(session_id, "user_input", user_prompt)
+    memory_store.add_document(session_id, "Client_user_input", user_prompt)
 
     # Run flow
     result = graph.invoke({"user_prompt": user_prompt})

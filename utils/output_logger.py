@@ -1,5 +1,5 @@
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 import json
 
 def save_agent_output(session_id: str, agent_name: str, doc_type: str, content: str, approved=True, feedback=None, base_path: str = "output"):
@@ -13,7 +13,7 @@ def save_agent_output(session_id: str, agent_name: str, doc_type: str, content: 
         "agent": agent_name,
         "doc_type": doc_type,
         "approved": approved,
-        "timestamp": datetime.now(datetime.timezone.utc).isoformat() + "Z",
+        "timestamp": datetime.now(timezone.utc).isoformat() + "Z",
         "content": content,
         "feedback": feedback,
     }

@@ -21,7 +21,7 @@ class BaseAgent(ABC):
         raw = memory_store.get_all_documents(session_id)
         if not raw:
             # assumes your first agent’s inputs include "user_prompt"
-            memory_store.add_document(session_id, "user_input", state["user_prompt"])
+            memory_store.add_document(session_id, "Client_user_input", state["user_prompt"])
             raw = memory_store.get_all_documents(session_id)
 
         # 2️⃣ Normalize Chroma’s return vs. a raw list

@@ -10,3 +10,4 @@ Please provide:
 - Interaction flows for web and mobile
 - Mobile-first UX considerations
 - Accessibility and usability best practices
+- Text-based wireframes for key screens (use simple ASCII formatting)

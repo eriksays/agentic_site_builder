@@ -1,8 +1,5 @@
 {persona}
 
-User prompt:
-{user_prompt}
-
 Relevant project context:
 {context}
 

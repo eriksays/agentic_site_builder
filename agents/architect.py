@@ -1,6 +1,7 @@
 from agents.base import BaseAgent
 from typing import List, Dict
 from utils.templates import load_template, format_template
+from utils.context import format_context
 
 
 class ArchitectAgent(BaseAgent):
@@ -20,15 +21,12 @@ class ArchitectAgent(BaseAgent):
         #user_input = context_docs.get("user_input", "")
 
         # 2️⃣ Flatten every stored doc (including user_input) into one big context
-        flattened_context = "\n\n".join(
-            f"### {doc_type}\n{text}"
-            for doc_type, text in context_docs.items()
-        )
+        flattened_context = format_context(context_docs)
+
 
         prompt = format_template(
             template,
             persona=self.persona,
-            #user_prompt=user_input,
             context=flattened_context,
             feedback_section=(
                 f"\n\nThe user has provided feedback for improvement:\n{inputs['feedback']}"
