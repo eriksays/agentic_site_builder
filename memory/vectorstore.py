@@ -5,6 +5,8 @@ from langchain_ollama import OllamaEmbeddings
 from config.settings import DEFAULT_MODEL
 
 from typing import Optional
+from types import SimpleNamespace
+
 
 
 class VectorStore:
@@ -30,9 +32,15 @@ class VectorStore:
             return results['documents'][0]
         return None
     
-    def get_all_documents(self, session_id: str) -> list[str]:
+    def get_all_documents(self, session_id: str):
         result = self.chroma.get(where={"session_id": session_id})
-        return result.get("documents", [])
+        docs = result.get("documents", [])
+        metas = result.get("metadatas", [])
+        
+        return [
+            SimpleNamespace(document=doc, metadata=meta)
+            for doc, meta in zip(docs, metas)
+        ]
 
     def get_all_documents_search(self, session_id: str) -> list[str]:
         results = self.chroma.similarity_search(

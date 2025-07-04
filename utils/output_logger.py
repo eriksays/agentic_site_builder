@@ -6,15 +6,14 @@ def save_agent_output(session_id: str, agent_name: str, doc_type: str, content: 
     folder = os.path.join(base_path, session_id)
     os.makedirs(folder, exist_ok=True)
 
-    #filename = f"{doc_type or agent_name}.json"
-    filename = f"{agent_name}.json"
+    filename = f"{agent_name}_{doc_type}.json"
     file_path = os.path.join(folder, filename)
 
     data = {
         "agent": agent_name,
         "doc_type": doc_type,
         "approved": approved,
-        "timestamp": datetime.utcnow().isoformat() + "Z",
+        "timestamp": datetime.now(datetime.timezone.utc).isoformat() + "Z",
         "content": content,
         "feedback": feedback,
     }

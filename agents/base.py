@@ -42,10 +42,19 @@ class BaseAgent(ABC):
                     items.append(entry)
 
         # 3️⃣ Build a mapping: doc_type → text
-        context_docs: Dict[str, str] = {
-            item.metadata.get("doc_type", f"doc_{i}"): item.document
-            for i, item in enumerate(items)
-        }
+        context_docs: Dict[str, str] = {}
+        for i, item in enumerate(items):
+            doc_type = item.metadata.get("doc_type")
+            if not doc_type:
+                print(f"[{self.name}] ⚠️ Missing 'doc_type' for document {i}, skipping.")
+                continue
+            context_docs[doc_type] = item.document
+
+        # 🔍 Log what the agent is reviewing
+        print(f"\n[{self.name}] reviewing context documents:")
+        for k in context_docs:
+            print(f" - {k}")
+        print()
  
         # 4️⃣ Generate this agent’s response with full context
         output = self._generate_response(state, context_docs)
@@ -67,7 +76,7 @@ class BaseAgent(ABC):
             save_agent_output(session_id, self.name, self.doc_type, output, approved=True, feedback=feedback)
  
         # 5️⃣ Persist this agent’s output under its doc_type
-        memory_store.add_document(session_id, self.doc_type, output)
+        memory_store.add_document(session_id, f'{self.name}_{self.doc_type}', output)
  
         return { self.output_key: output }
 
