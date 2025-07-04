@@ -2,6 +2,8 @@ from agents.base import BaseAgent
 from typing import List, Dict
 from utils.templates import load_template, format_template
 from utils.context import format_context
+from config.settings import ENABLE_PROMPT_LOGGING
+from utils.log_utils import log_prompt_and_response
 
 class UXDesignerAgent(BaseAgent):
     def __init__(self, llm):
@@ -10,13 +12,13 @@ class UXDesignerAgent(BaseAgent):
             name="UXDesignerAgent",
             input_keys=["architecture_plan"],
             output_key="ux_designer_output",
-            doc_type="ux_designer_output",
+            doc_type="ux_designer",
             persona="You are a senior UI designer. Based on the user's prompt, create a visually engaging and consistent user interface plan. Include design goals, component style guidelines, platform-specific considerations (web and mobile), and accessibility compliance suggestions."
         )
 
 
-    def _generate_response(self, inputs: Dict[str, str], context_docs: List[str]) -> str:
-        template = load_template("ux_designer_output.txt")
+    def _generate_response(self, inputs: Dict[str, str], context_docs: List[str], session_id: str) -> str:
+        template = load_template(f"{self.doc_type}.txt")
         
         # 2️⃣ Flatten every stored doc (including user_input) into one big context
         flattened_context = format_context(context_docs)
@@ -30,4 +32,18 @@ class UXDesignerAgent(BaseAgent):
                 if "feedback" in inputs else ""
             )
         )
-        return self.llm.invoke(prompt)
+        # Call the LLM
+        response = self.llm.invoke(prompt)
+        # Optional logging
+        if ENABLE_PROMPT_LOGGING:
+            print(f"\n📄 [{self.name}] Prompt from {self.doc_type}")
+            print("-" * 80)
+            print(prompt)
+            print("-" * 80)
+            print(f"\n🧠 [{self.name}] LLM Output:")
+            print(response)
+            print("=" * 80)
+
+            log_prompt_and_response(self.name, session_id, prompt, response)
+
+        return response

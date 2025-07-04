@@ -8,6 +8,10 @@ __pycache__/
 
 output/*
 !output/.gitkeep
+
+logs/*
+!logs/.gitkeep
+
 # Distribution / packaging
 .Python
 build/

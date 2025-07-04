@@ -57,14 +57,14 @@ class BaseAgent(ABC):
         print()
  
         # 4️⃣ Generate this agent’s response with full context
-        output = self._generate_response(state, context_docs)
+        output = self._generate_response(state, context_docs, session_id)
  
          # Humanintheloop & logging…
          # ✅ Include feedback if available
         if "feedback" in state:
             inputs["feedback"] = state["feedback"]
 
-        output = self._generate_response(inputs, context_docs)
+        output = self._generate_response(inputs, context_docs, session_id)
 
         if self.enable_hitl:
             reviewed_output, feedback = human_review(output, self.name)
