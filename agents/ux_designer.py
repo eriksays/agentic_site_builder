@@ -3,21 +3,22 @@ from typing import List, Dict
 from utils.templates import load_template, format_template
 
 
-class ArchitectAgent(BaseAgent):
+class UXDesignerAgent(BaseAgent):
     def __init__(self, llm):
         super().__init__(
             llm=llm,
-            name="ArchitectAgent",
-            input_keys=["product_spec"],
-            output_key="architecture_plan",
-            doc_type="architecture_plan",
-            persona="You are a senior software architect. Based on the product specification, produce a high-level architecture plan. Include major components, technologies, APIs, and any assumptions."
+            name="UXDesignerAgent",
+            input_keys=["architecture_plan"],
+            output_key="ux_designer_output",
+            doc_type="ux_designer_output",
+            persona="You are a senior UI designer. Based on the user's prompt, create a visually engaging and consistent user interface plan. Include design goals, component style guidelines, platform-specific considerations (web and mobile), and accessibility compliance suggestions."
         )
 
-    def _generate_response(self, inputs: Dict[str, str], context_docs: Dict[str, str]) -> str:
-        template = load_template("architecture_plan_template.txt")
+
+    def _generate_response(self, inputs: Dict[str, str], context_docs: List[str]) -> str:
+        template = load_template("ux_designer_output.txt")
         # 1️⃣ Pull the original user prompt out of memory
-        #user_input = context_docs.get("user_input", "")
+        user_input = context_docs.get("user_input", "")
 
         # 2️⃣ Flatten every stored doc (including user_input) into one big context
         flattened_context = "\n\n".join(
@@ -28,7 +29,7 @@ class ArchitectAgent(BaseAgent):
         prompt = format_template(
             template,
             persona=self.persona,
-            #user_prompt=user_input,
+            user_prompt=user_input,
             context=flattened_context,
             feedback_section=(
                 f"\n\nThe user has provided feedback for improvement:\n{inputs['feedback']}"

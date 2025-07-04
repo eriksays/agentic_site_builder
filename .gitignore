@@ -6,6 +6,8 @@ __pycache__/
 # C extensions
 *.so
 
+output/*
+!output/.gitkeep
 # Distribution / packaging
 .Python
 build/

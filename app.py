@@ -4,6 +4,8 @@ from agents.registry import get_registered_agents
 from memory.vectorstore import VectorStore
 from workflows.main_flow import create_flow
 from utils.input_with_default import input_with_default
+from utils.output_logger import save_metadata
+from datetime import datetime
 import uuid
 
 # Placeholder: use your actual chroma client
@@ -21,6 +23,15 @@ if __name__ == "__main__":
     agents = get_registered_agents(llm)
     graph = create_flow(agents, memory_store, session_id)
 
+    # seed the raw user input
+    memory_store.add_document(session_id, "user_input", user_prompt)
+
     # Run flow
     result = graph.invoke({"user_prompt": user_prompt})
+    save_metadata(session_id, {
+        "timestamp": datetime.now().isoformat(),
+        "model": model_name,
+        "user_prompt": user_prompt
+    })
+
     print(result)

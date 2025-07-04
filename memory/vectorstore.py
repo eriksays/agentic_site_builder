@@ -29,8 +29,12 @@ class VectorStore:
         if results and results['documents']:
             return results['documents'][0]
         return None
-
+    
     def get_all_documents(self, session_id: str) -> list[str]:
+        result = self.chroma.get(where={"session_id": session_id})
+        return result.get("documents", [])
+
+    def get_all_documents_search(self, session_id: str) -> list[str]:
         results = self.chroma.similarity_search(
             "project context",
             k=20,

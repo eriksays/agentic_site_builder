@@ -1,0 +1,12 @@
+{persona}
+
+Relevant project context:
+{context}
+
+{feedback_section}
+
+Please provide:
+- User journey outline (including key touchpoints)
+- Interaction flows for web and mobile
+- Mobile-first UX considerations
+- Accessibility and usability best practices

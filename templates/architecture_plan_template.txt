@@ -1,10 +1,8 @@
 {persona}
 
-Product Specification:
-{product_spec}
-
-Prior context:
+Relevant project context:
 {context}
+
 {feedback_section}
 
 Please provide a high-level architecture plan including:
