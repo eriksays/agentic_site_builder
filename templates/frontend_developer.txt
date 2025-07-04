@@ -1,0 +1,13 @@
+{persona}
+
+Relevant project context:
+{context}
+
+{feedback_section}
+
+Please provide:
+- Component hierarchy (top-down view)
+- Suggested frameworks, libraries, or tools (e.g., React, Tailwind, HTMX)
+- State management plan (including shared/global state)
+- Strategy for integrating UI with backend APIs
+- Reusable component or layout patterns

@@ -1,0 +1,13 @@
+{persona}
+
+Relevant project context:
+{context}
+
+{feedback_section}
+
+Please provide:
+- Data models with key fields and relationships
+- REST or GraphQL API endpoints (with request/response examples)
+- Key business logic modules and responsibilities
+- Authentication/authorization strategy
+- Suggested backend frameworks, databases, and cloud services
