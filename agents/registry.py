@@ -12,7 +12,7 @@ def get_registered_agents(llm):
         #ProductManagerAgent(llm),
         #ArchitectAgent(llm),
         #UXDesignerAgent(llm),
-        BackEndDeveloperAgent(llm),
+        #BackEndDeveloperAgent(llm),
         FrontEndDeveloperAgent(llm),
         # Add BackendEngineerAgent(llm), etc. as you create them
     ]

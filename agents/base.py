@@ -67,12 +67,27 @@ class BaseAgent(ABC):
         # 4️⃣ Generate this agent’s response with full context
         output = self._generate_response(state, context_docs, session_id)
  
+        output = self._generate_response(inputs, context_docs, session_id)
+        MAX_RETRIES = 3
+        for attempt in range(MAX_RETRIES):
+            try:
+                parsed = json.loads(output)
+                break  # Success
+            except json.JSONDecodeError as e:
+                print(f"Attempt {attempt+1}: Invalid JSON — {e}")
+                feedback = f"The output must be valid JSON. Do not include comments, markdown, or any intro like 'Here is the implementation'. Start directly with {{ and ensure the structure ends with 'summary'. Fix the following error: {e}'"
+                context = context_docs if isinstance(context_docs, list) else [context_docs]
+                context += [{"role": "system", "content": feedback}]
+                output = self._generate_response(
+                    inputs,
+                    context,
+                    session_id
+                )
+
          # Humanintheloop & logging…
          # ✅ Include feedback if available
         if "feedback" in state:
             inputs["feedback"] = state["feedback"]
-
-        output = self._generate_response(inputs, context_docs, session_id)
 
         if self.enable_hitl:
             reviewed_output, feedback = human_review(output, self.name)
