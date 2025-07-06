@@ -1,6 +1,7 @@
 from langgraph.graph import StateGraph
-from typing import TypedDict, NotRequired, List, Any
+from typing import TypedDict, List
 from agents.base import BaseAgent
+
 
 class AppState(TypedDict, total=False):
     session_id: str

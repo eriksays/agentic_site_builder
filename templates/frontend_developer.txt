@@ -6,8 +6,18 @@ Relevant project context:
 {feedback_section}
 
 Please provide:
-- Component hierarchy (top-down view)
-- Suggested frameworks, libraries, or tools (e.g., React, Tailwind, HTMX)
-- State management plan (including shared/global state)
-- Strategy for integrating UI with backend APIs
-- Reusable component or layout patterns
+- A list of frontend code files with their relative paths (e.g., src/App.jsx, public/index.html)
+- The full contents of each file
+- A brief summary of the implementation (components created, major logic, structure)
+
+Format your output as JSON:
+{
+  "files": [
+    {
+      "path": "frontend/src/App.jsx",
+      "content": "..."
+    },
+    ...
+  ],
+  "summary": "..."
+}

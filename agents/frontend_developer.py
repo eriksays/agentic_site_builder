@@ -13,7 +13,12 @@ class FrontEndDeveloperAgent(BaseAgent):
             input_keys=["architecture_plan"],
             output_key="frontend_developer_output",
             doc_type="frontend_developer",
-            persona = "You are a senior frontend developer. Based on the provided architecture and UX design, create a detailed implementation plan for the web frontend. Include component hierarchy, state management considerations, chosen frameworks/libraries, and UI integration strategy."
+            persona = (
+                "You are a senior frontend developer. Based on the product spec, UX design, and architectural plan, "
+                "generate production-ready frontend code using a modern JavaScript framework (e.g., React with Vite). "
+                "Follow the defined component structure, routing plan, and visual style. Use modular and readable code. "
+                "Return a list of code files with their relative paths and contents."
+            )
         )
 
 

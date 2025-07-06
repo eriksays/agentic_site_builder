@@ -13,7 +13,11 @@ class BackEndDeveloperAgent(BaseAgent):
             input_keys=["frontend_developer"],
             output_key="backend_developer_output",
             doc_type="backend_developer",
-            persona = "You are a senior backend engineer. Based on the product specification and architecture plan, generate a backend system design. Include data models, API contract definitions, business logic layers, and technology stack recommendations."
+            persona = (
+                "You are a senior backend developer. Based on the product spec and architecture, implement the backend API "
+                "using a modern Python framework such as FastAPI. Include route handlers, data models, and necessary config files. "
+                "Structure your code into modular files. Return a list of code files with their relative paths and contents."
+            )
         )
 
 

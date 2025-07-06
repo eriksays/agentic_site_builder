@@ -12,6 +12,7 @@ class BaseAgent(ABC):
         self.doc_type = doc_type  # For chroma storage
         self.persona = persona
         self.enable_hitl = enable_hitl
+        self.writes_code = False
 
     def run(self, state: Dict[str, Any], session_id: str, memory_store) -> Dict[str, Any]:
         # ✅ Ensure inputs is a DICT

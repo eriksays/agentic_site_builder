@@ -6,8 +6,18 @@ Relevant project context:
 {feedback_section}
 
 Please provide:
-- Data models with key fields and relationships
-- REST or GraphQL API endpoints (with request/response examples)
-- Key business logic modules and responsibilities
-- Authentication/authorization strategy
-- Suggested backend frameworks, databases, and cloud services
+- A list of backend code files with their relative paths (e.g., app/main.py, app/routes/user.py)
+- The full contents of each file
+- A brief summary of the implementation (routes, models, logic, structure)
+
+Format your output as JSON:
+{
+  "files": [
+    {
+      "path": "backend/app/main.py",
+      "content": "..."
+    },
+    ...
+  ],
+  "summary": "..."
+}
