@@ -1,3 +1,28 @@
+🚨 Output Constraints (MANDATORY):
+- Begin your response directly with `{{` — do NOT include any introductions, comments, or markdown.
+- Do NOT wrap your response in triple backticks (```).
+- The response must be valid JSON that can be parsed with `json.loads(...)`.
+- All "content" strings must use `\n` for newlines and must not use triple quotes (`"""`).
+- No trailing commas or syntax errors — the result must pass JSON validation and Python linting.
+
+DO NOT:
+- Place a comma after the closing square bracket of the "files" array
+- Add "summary" as a separate object — it must be a field inside the same JSON object
+
+✅ Correct:
+{{
+  "files": [...],
+  "summary": "..."
+}}
+
+❌ Incorrect:
+{{
+  "files": [...]
+}},
+"summary": "..."
+
+---
+
 {persona}
 
 Relevant project context:
@@ -5,11 +30,7 @@ Relevant project context:
 
 {feedback_section}
 
-Please output **only valid JSON** — do not include any descriptions, summaries, introductions, or markdown. Begin your response directly with `{{`, and make sure the entire output is valid JSON that can be parsed with `json.loads(...)`.
-
-Your response must follow this structure:
-
-Format your output as JSON:
+✅ Example (you MUST follow this style):
 {{
   "files": [
     {{

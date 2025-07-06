@@ -96,17 +96,8 @@ class BaseAgent(ABC):
             save_agent_output(session_id, self.name, self.doc_type, output, approved=True, feedback=feedback)
             if self.writes_code:
                 # Try to extract the JSON block from inside the code fence
-                match = re.search(r"```(?:json)?\n({.*?})\n```", output, re.DOTALL)
-                if match:
-                    parsed_content = json.loads(match.group(1))
-                    files = parsed_content["files"]
-                else:
-                    # Fallback: try to parse entire string in case it really is JSON
-                    try:
-                        parsed_content = json.loads(output)
-                        files = parsed_content["files"]
-                    except json.JSONDecodeError:
-                        raise ValueError("Failed to parse 'content' as JSON")
+                files = extract_files_from_json_file(session_id, self.name, self.doc_type)
+                
                 write_code_files(session_id, self.name, self.doc_type, files)
         
         # 5️⃣ Persist this agent’s output under its doc_type

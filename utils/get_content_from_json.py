@@ -1,7 +1,19 @@
 import json
-from typing import List, Dict
 import os
+import re
 
+def safe_parse_content_field(raw: str):
+    try:
+        # Extract first JSON object using regex
+        match = re.search(r"\{.*\}", raw, re.DOTALL)
+        if not match:
+            raise ValueError("No valid JSON object found in content.")
+        cleaned = match.group(0)
+        return json.loads(cleaned)
+    except json.JSONDecodeError as e:
+        print("Failed to parse 'content' field.")
+        raise e
+    
 def extract_files_from_json_file(session_id: str, agent_name: str, doc_type: str, base_path: str = "output"):
     folder = os.path.join(base_path, session_id)
     os.makedirs(folder, exist_ok=True)
@@ -23,9 +35,10 @@ def extract_files_from_json_file(session_id: str, agent_name: str, doc_type: str
             json_data = json.load(f)
         
         # Now parse the nested 'content' string field
-        content_data = json.loads(json_data['content'])
+        parsed_content = safe_parse_content_field(json_data['content'])
+        files = parsed_content['files']
         
-        return content_data.get('files', [])
+        return files
     except (json.JSONDecodeError, KeyError) as e:
         print(f"Error parsing JSON or extracting files: {e}")
         return []
