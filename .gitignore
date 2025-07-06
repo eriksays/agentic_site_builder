@@ -12,6 +12,10 @@ output/*
 logs/*
 !logs/.gitkeep
 
+generated/*
+!generated/.gitkeep
+
+
 # Distribution / packaging
 .Python
 build/

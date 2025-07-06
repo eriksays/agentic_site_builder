@@ -5,19 +5,22 @@ Relevant project context:
 
 {feedback_section}
 
-Please provide:
-- A list of backend code files with their relative paths (e.g., app/main.py, app/routes/user.py)
-- The full contents of each file
-- A brief summary of the implementation (routes, models, logic, structure)
+Please output **only valid JSON** — do not include any explanations, summaries, or markdown formatting. Start your response directly with `{{`, and ensure the full output is valid JSON (compatible with `json.loads(...)`).
 
-Format your output as JSON:
-{
+Each file's `"content"` value must:
+- Be syntactically valid Python.
+- Escape all special characters properly (e.g., newlines, quotes).
+- Use **standard string quotes (`"` or `'`)**, not triple-quoted Python strings (`"""`).
+- Avoid trailing commas or missing punctuation.
+- Never include `"""` inside the JSON string values.
+
+Structure your response like this:
+{{
   "files": [
-    {
+    {{
       "path": "backend/app/main.py",
-      "content": "..."
-    },
-    ...
+      "content": "def example():\\n    print(\\\"Hello, world!\\\")"
+    }}
   ],
-  "summary": "..."
-}
+  "summary": "Brief explanation of implementation."
+}}

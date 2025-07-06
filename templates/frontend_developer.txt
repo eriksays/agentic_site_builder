@@ -5,19 +5,18 @@ Relevant project context:
 
 {feedback_section}
 
-Please provide:
-- A list of frontend code files with their relative paths (e.g., src/App.jsx, public/index.html)
-- The full contents of each file
-- A brief summary of the implementation (components created, major logic, structure)
+Please output **only valid JSON** — do not include any descriptions, summaries, introductions, or markdown. Begin your response directly with `{{`, and make sure the entire output is valid JSON that can be parsed with `json.loads(...)`.
+
+Your response must follow this structure:
 
 Format your output as JSON:
-{
+{{
   "files": [
-    {
+    {{
       "path": "frontend/src/App.jsx",
       "content": "..."
-    },
+    }},
     ...
   ],
   "summary": "..."
-}
+}}

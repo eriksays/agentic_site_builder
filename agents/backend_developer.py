@@ -17,7 +17,8 @@ class BackEndDeveloperAgent(BaseAgent):
                 "You are a senior backend developer. Based on the product spec and architecture, implement the backend API "
                 "using a modern Python framework such as FastAPI. Include route handlers, data models, and necessary config files. "
                 "Structure your code into modular files. Return a list of code files with their relative paths and contents."
-            )
+            ),
+            writes_code = True
         )
 
 

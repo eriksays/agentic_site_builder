@@ -18,7 +18,8 @@ class FrontEndDeveloperAgent(BaseAgent):
                 "generate production-ready frontend code using a modern JavaScript framework (e.g., React with Vite). "
                 "Follow the defined component structure, routing plan, and visual style. Use modular and readable code. "
                 "Return a list of code files with their relative paths and contents."
-            )
+            ),
+            writes_code = True
         )
 
 

@@ -2,9 +2,14 @@ from abc import ABC, abstractmethod
 from typing import List, Dict, Any
 from utils.hitl import human_review
 from utils.output_logger import save_agent_output
+from utils.file_writer import write_code_files
+from utils.get_content_from_json import extract_files_from_json_file
+import json
+import re
+from pprint import pprint
 
 class BaseAgent(ABC):
-    def __init__(self, llm, name: str, input_keys: List[str], output_key: str, doc_type: str, persona: str, enable_hitl: bool = True):
+    def __init__(self, llm, name: str, input_keys: List[str], output_key: str, doc_type: str, persona: str, enable_hitl: bool = True, writes_code: bool = False):
         self.llm = llm
         self.name = name
         self.input_keys = input_keys
@@ -12,7 +17,7 @@ class BaseAgent(ABC):
         self.doc_type = doc_type  # For chroma storage
         self.persona = persona
         self.enable_hitl = enable_hitl
-        self.writes_code = False
+        self.writes_code = writes_code
 
     def run(self, state: Dict[str, Any], session_id: str, memory_store) -> Dict[str, Any]:
         # ✅ Ensure inputs is a DICT
@@ -23,6 +28,8 @@ class BaseAgent(ABC):
         if not raw:
             # assumes your first agent’s inputs include "user_prompt"
             memory_store.add_document(session_id, "Client_user_input", state["user_prompt"])
+            #TODO: add this to the output folder
+            
             raw = memory_store.get_all_documents(session_id)
 
         # 2️⃣ Normalize Chroma’s return vs. a raw list
@@ -73,9 +80,35 @@ class BaseAgent(ABC):
                 state["feedback"] = feedback
                 return self.run(state, session_id, memory_store)
             output = reviewed_output
+            
             #save to disk
             save_agent_output(session_id, self.name, self.doc_type, output, approved=True, feedback=feedback)
- 
+            if self.writes_code:
+                # Try to extract the JSON block from inside the code fence
+                
+                files = extract_files_from_json_file(session_id, self.name, self.doc_type)
+                
+                write_code_files(session_id, self.name, self.doc_type, files)
+
+                
+        #TODO - we're not saving to output if enbale_hitl is set to false - need to fix that
+        else:
+            save_agent_output(session_id, self.name, self.doc_type, output, approved=True, feedback=feedback)
+            if self.writes_code:
+                # Try to extract the JSON block from inside the code fence
+                match = re.search(r"```(?:json)?\n({.*?})\n```", output, re.DOTALL)
+                if match:
+                    parsed_content = json.loads(match.group(1))
+                    files = parsed_content["files"]
+                else:
+                    # Fallback: try to parse entire string in case it really is JSON
+                    try:
+                        parsed_content = json.loads(output)
+                        files = parsed_content["files"]
+                    except json.JSONDecodeError:
+                        raise ValueError("Failed to parse 'content' as JSON")
+                write_code_files(session_id, self.name, self.doc_type, files)
+        
         # 5️⃣ Persist this agent’s output under its doc_type
         memory_store.add_document(session_id, f'{self.name}_{self.doc_type}', output)
  

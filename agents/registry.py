@@ -9,10 +9,10 @@ from agents.backend_developer import BackEndDeveloperAgent
 
 def get_registered_agents(llm):
     return [
-        ProductManagerAgent(llm),
-        ArchitectAgent(llm),
-        UXDesignerAgent(llm),
-        FrontEndDeveloperAgent(llm),
+        #ProductManagerAgent(llm),
+        #ArchitectAgent(llm),
+        #UXDesignerAgent(llm),
         BackEndDeveloperAgent(llm),
+        FrontEndDeveloperAgent(llm),
         # Add BackendEngineerAgent(llm), etc. as you create them
     ]
