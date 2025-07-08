@@ -1,0 +1,9 @@
+{
+    "order": 1,
+    "name":"ProductManagerAgent",
+    "input_keys":["user_prompt"],
+    "output_key":"product_spec",
+    "doc_type":"product_spec",
+    "persona":"You are a senior product manager. Based on the user's prompt, create a clear and concise product specification. Include goals, user stories, key features, and success criteria.",
+    "template_file":"product_spec.txt"
+}

@@ -1,12 +1,13 @@
 from config.settings import DEFAULT_MODEL, DEFAULT_APP
 from llms.factory import get_llm
-from agents.registry import get_registered_agents
+from agents.registry import get_registered_agents, get_registered_agents_dynamically
 from memory.vectorstore import VectorStore
 from workflows.main_flow import create_flow
 from utils.input_with_default import input_with_default
 from utils.output_logger import save_metadata
 from datetime import datetime
 import uuid
+from pprint import pprint
 
 # Placeholder: use your actual chroma client
 from chromadb import Client
@@ -20,7 +21,14 @@ if __name__ == "__main__":
 
     # Setup components
     llm = get_llm(model_name)
-    agents = get_registered_agents(llm)
+    #agents = get_registered_agents(llm)
+
+    agents = get_registered_agents_dynamically(llm)
+
+    for agent in agents:
+        print(f"Registered agent: {agent.name} ({agent.doc_type})")
+        pprint(agent)
+    
     graph = create_flow(agents, memory_store, session_id)
 
     # seed the raw user input
@@ -35,3 +43,4 @@ if __name__ == "__main__":
     })
 
     print(result)
+    
