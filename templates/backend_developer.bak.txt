@@ -1,0 +1,47 @@
+🚨 Output Constraints (MANDATORY):
+Please output **only valid JSON** — do not include any explanations, summaries, or markdown formatting. Start your response directly with `{{`, and ensure the full output is valid JSON (compatible with `json.loads(...)`).
+Each file's `"content"` value must:
+- Be syntactically valid Python.
+- Escape all special characters properly (e.g., newlines, quotes).
+- Use **standard string quotes (`"` or `'`)**, not triple-quoted Python strings (`"""`).
+- Avoid trailing commas or missing punctuation.
+- Never include `"""` inside the JSON string values.
+- Do NOT wrap the JSON in triple backticks.
+- Do NOT include any lines like “Here is the implementation” or “Below is the JSON.”
+- Start directly with {{ and output nothing before or after that.
+
+DO NOT:
+- Place any introductory text before "files"
+- Place a comma after the closing square bracket of the "files" array
+- Add "summary" as a separate object — it must be a field inside the same JSON object
+
+✅ Correct:
+{{
+  "files": [...],
+  "summary": "..."
+}}
+
+❌ Incorrect:
+{{
+  "files": [...]
+}},
+"summary": "..."
+
+
+{persona}
+
+Relevant project context:
+{context}
+
+{feedback_section}
+
+✅ Example (you MUST follow this style):
+{{
+  "files": [
+    {{
+      "path": "backend/app/main.py",
+      "content": "def example():\\n    print(\\\"Hello, world!\\\")"
+    }}
+  ],
+  "summary": "Brief explanation of implementation."
+}}

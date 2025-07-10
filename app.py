@@ -28,7 +28,7 @@ if __name__ == "__main__":
     for agent in agents:
         print(f"Registered agent: {agent.name} ({agent.doc_type})")
         pprint(agent)
-    
+    input('hi')
     graph = create_flow(agents, memory_store, session_id)
 
     # seed the raw user input
