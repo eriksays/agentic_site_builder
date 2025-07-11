@@ -9,10 +9,9 @@ import re
 from pprint import pprint
 
 class BaseAgent(ABC):
-    def __init__(self, llm, name: str, input_keys: List[str], output_key: str, doc_type: str, persona: str, enable_hitl: bool = True, writes_code: bool = False):
+    def __init__(self, llm, name: str, output_key: str, doc_type: str, persona: str, enable_hitl: bool = True, writes_code: bool = False):
         self.llm = llm
         self.name = name
-        self.input_keys = input_keys
         self.output_key = output_key
         self.doc_type = doc_type  # For chroma storage
         self.persona = persona
@@ -21,7 +20,7 @@ class BaseAgent(ABC):
 
     def run(self, state: Dict[str, Any], session_id: str, memory_store) -> Dict[str, Any]:
         # ✅ Ensure inputs is a DICT
-        inputs = {k: state[k] for k in self.input_keys if k in state}
+        inputs = {}
 
         # 1️⃣ On the very first invocation, if nothing is in memory, seed user_input
         raw = memory_store.get_all_documents(session_id)

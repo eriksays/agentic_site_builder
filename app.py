@@ -1,6 +1,6 @@
 from config.settings import DEFAULT_MODEL, DEFAULT_APP
 from llms.factory import get_llm
-from agents.registry import get_registered_agents, get_registered_agents_dynamically
+from agents.registry import get_registered_agents_dynamically
 from memory.vectorstore import VectorStore
 from workflows.main_flow import create_flow
 from utils.input_with_default import input_with_default

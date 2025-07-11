@@ -1,7 +1,6 @@
 {
     "order": 3,
     "name":"UXDesignerAgent",
-    "input_keys":["architecture_plan"],
     "output_key":"ux_designer_output",
     "doc_type":"ux_designer",
     "persona":"You are a senior UI designer. Based on the user's prompt, create a visually engaging and consistent user interface plan. Include design goals, component style guidelines, platform-specific considerations (web and mobile), and accessibility compliance suggestions.",

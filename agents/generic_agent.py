@@ -16,7 +16,6 @@ class GenericAgent(BaseAgent):
         super().__init__(
             llm=llm,
             name=profile["name"],
-            input_keys=profile["input_keys"],
             output_key=profile["output_key"],
             doc_type=profile["doc_type"],
             persona=profile["persona"],
