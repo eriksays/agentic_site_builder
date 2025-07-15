@@ -45,7 +45,12 @@ class GenericAgent(BaseAgent):
 
                 cleaned_response = sanitize_json_code_blocks(strip_non_json_prefix(raw_response))
 
-                response = parser.parse(cleaned_response).model_dump_json()
+                try:
+                    response = parser.parse(cleaned_response).model_dump_json()
+                except Exception as e:
+                    print(f"[{self.name}] ❌ Parsing failed: {e}")
+                    print("🔎 Response content:", cleaned_response[:1000])
+                    return self._build_empty_output()  # or raise with more context
 
             except (json.JSONDecodeError, OutputParserException) as e:
                 print("❌ Parsing failed:", e)
