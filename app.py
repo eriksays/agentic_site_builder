@@ -25,10 +25,10 @@ if __name__ == "__main__":
 
     agents = get_registered_agents_dynamically(llm)
 
-    for agent in agents:
-        print(f"Registered agent: {agent.name} ({agent.doc_type})")
-        pprint(agent)
-    input('hi')
+    #for agent in agents:
+        #print(f"Registered agent: {agent.name} ({agent.doc_type})")
+        #pprint(agent)
+    #input('hi')
     graph = create_flow(agents, memory_store, session_id)
 
     # seed the raw user input

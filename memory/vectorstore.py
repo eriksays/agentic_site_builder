@@ -49,3 +49,7 @@ class VectorStore:
             filter={"session_id": session_id}
         )
         return [doc.page_content for doc in results] if results else []
+    
+    def delete_document(self, session_id: str, doc_type: str):
+        key = self._make_key(session_id, doc_type)
+        self.chroma.delete(ids=[key])

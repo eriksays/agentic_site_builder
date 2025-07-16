@@ -9,13 +9,13 @@ import re
 from pprint import pprint
 
 class BaseAgent(ABC):
-    def __init__(self, llm, name: str, output_key: str, doc_type: str, persona: str, enable_hitl: bool = True, writes_code: bool = False):
+    def __init__(self, llm, name: str, output_key: str, doc_type: str, persona: str, enable_hitl: bool = False, writes_code: bool = False):
         self.llm = llm
         self.name = name
         self.output_key = output_key
         self.doc_type = doc_type  # For chroma storage
         self.persona = persona
-        self.enable_hitl = enable_hitl
+        self.enable_hitl = False
         self.writes_code = writes_code
 
     def run(self, state: Dict[str, Any], session_id: str, memory_store) -> Dict[str, Any]:
@@ -58,10 +58,11 @@ class BaseAgent(ABC):
             context_docs[doc_type] = item.document
 
         # 🔍 Log what the agent is reviewing
-        print(f"\n[{self.name}] reviewing context documents:")
-        for k in context_docs:
-            print(f" - {k}")
-        print()
+        # TODO: add to a logging system instead of printing
+        # print(f"\n[{self.name}] reviewing context documents:")
+        # for k in context_docs:
+        #     print(f" - {k}")
+        # print()
  
         # 4️⃣ Generate this agent’s response with full context
         output = self._generate_response(state, context_docs, session_id)
@@ -90,7 +91,7 @@ class BaseAgent(ABC):
                 
         #TODO - we're not saving to output if enbale_hitl is set to false - need to fix that
         else:
-            save_agent_output(session_id, self.name, self.doc_type, output, approved=True, feedback=feedback)
+            save_agent_output(session_id, self.name, self.doc_type, output, approved=True, feedback=None)
             if self.writes_code:
                 # Try to extract the JSON block from inside the code fence
                 files = extract_files_from_json_file(session_id, self.name, self.doc_type)

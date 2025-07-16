@@ -21,7 +21,8 @@ class GenericAgent(BaseAgent):
             output_key=profile["output_key"],
             doc_type=profile["doc_type"],
             persona=profile["persona"],
-            writes_code=profile.get("writes_code", False)
+            writes_code=profile.get("writes_code", False),
+            enable_hitl=profile.get("enable_hitl", False)
         )
         self.template_file = profile["template_file"]
 
@@ -48,13 +49,13 @@ class GenericAgent(BaseAgent):
                 try:
                     response = parser.parse(cleaned_response).model_dump_json()
                 except Exception as e:
-                    print(f"[{self.name}] ❌ Parsing failed: {e}")
-                    print("🔎 Response content:", cleaned_response[:1000])
+                    # print(f"[{self.name}] ❌ Parsing failed: {e}")
+                    # print("🔎 Response content:", cleaned_response[:1000])
                     return self._build_empty_output()  # or raise with more context
 
             except (json.JSONDecodeError, OutputParserException) as e:
-                print("❌ Parsing failed:", e)
-                print("🔎 Offending content:\n", cleaned_response[:1000])
+                # print("❌ Parsing failed:", e)
+                # print("🔎 Offending content:\n", cleaned_response[:1000])
                 log_prompt_and_response(self.name, session_id, prompt, cleaned_response)
         else:
             response = self.llm.invoke(prompt)
@@ -63,13 +64,13 @@ class GenericAgent(BaseAgent):
         
         if ENABLE_PROMPT_LOGGING:
             try:
-                print(f"\n📄 [{self.name}] Prompt from {self.doc_type}")
-                print("-" * 80)
-                print(prompt)
-                print("-" * 80)
-                print(f"\n🧠 [{self.name}] LLM Output:")
-                print(response)
-                print("=" * 80)
+                # print(f"\n📄 [{self.name}] Prompt from {self.doc_type}")
+                # print("-" * 80)
+                # print(prompt)
+                # print("-" * 80)
+                # print(f"\n🧠 [{self.name}] LLM Output:")
+                # print(response)
+                # print("=" * 80)
                 log_prompt_and_response(self.name, session_id, prompt, response)
             except Exception as e:
                 print(f"❌ Error logging prompt and response: {e}")

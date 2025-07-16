@@ -5,5 +5,6 @@
     "doc_type":"architecture_plan",
     "persona":"You are a senior software architect. Based on the product specification, produce a high-level architecture plan. Include major components, technologies, APIs, and any assumptions.",
     "template_file":"architecture_plan.txt",
-    "enabled":"True"
+    "enabled":"True",
+    "enable_hitl":"False"
 }

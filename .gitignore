@@ -15,6 +15,9 @@ logs/*
 generated/*
 !generated/.gitkeep
 
+sessions/*
+!sessions/.gitkeep
+
 
 # Distribution / packaging
 .Python

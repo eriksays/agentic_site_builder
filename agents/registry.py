@@ -13,7 +13,7 @@ def get_registered_agents_dynamically(llm):
             with open(os.path.join(profiles_dir, filename), "r") as f:
                 profile = json.load(f)
             if profile.get('enabled') == "True":
-                input(f"{profile.get('name')}, {profile.get('enabled')}")
+                #input(f"{profile.get('name')}, {profile.get('enabled')}")
                 agents.append((profile.get("order", 9999), GenericAgent(llm, profile)))
 
     # Sort by 'order' and strip out the tuples
